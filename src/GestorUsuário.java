@@ -39,8 +39,7 @@ public class GestorUsuarios {
 
     // Metodo para validar a senha
     private boolean validarSenha(String senha) {
-        // senha deve ter pelo menos 6 caracteres
         return senha.length() >= 6;
-    }  ;
+        }
     }
 }
