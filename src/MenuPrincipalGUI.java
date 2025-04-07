@@ -31,44 +31,44 @@ public class MenuPrincipalGUI {
         miCadastrarTransacao.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new CadastroTransacaoGUI(gestorTransacoes, gestorCategoria).exibir();
+                new CadastroTransacaoGUI(gestorTransacoes, gestorCategoria);
             }
         });
         miConsultarTransacoes = new JMenuItem("Consultar Transações");
         miConsultarTransacoes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new ConsultaTransacoesGUI(gestorTransacoes, gestorCategoria).exibir();
+                new ConsultaTransacoesGUI(gestorTransacoes, gestorCategoria);
             }
         });
-
+        
         mnTransacao.add(miCadastrarTransacao);
         mnTransacao.add(miConsultarTransacoes);
-
         mnResumoFinanceiro = new JMenu("Resumo Financeiro");
         miResumoFinanceiro = new JMenuItem("Resumo Financeiro");
         miResumoFinanceiro.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new ResumoFinanceiroGUI(gestorTransacoes).exibir();
+                new ResumoFinanceiroGUI(gestorTransacoes);
             }
         });
         mnResumoFinanceiro.add(miResumoFinanceiro);
-
         mnCategoria = new JMenu("Categorias");
         miGerenciarCategorias = new JMenuItem("Gerenciar Categorias");
         miGerenciarCategorias.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new GerenciarCategoriasGUI(gestorCategoria).exibir();
+                new GerenciarCategoriasGUI(gestorCategoria);
             }
         });
         mnCategoria.add(miGerenciarCategorias);
         menuBar.add(mnTransacao);
         menuBar.add(mnResumoFinanceiro);
         menuBar.add(mnCategoria);
-        frame.setVisible(true);
 
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
     public void exibir() {
         frame.setVisible(true);
     }
