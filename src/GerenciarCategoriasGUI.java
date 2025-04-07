@@ -4,8 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class GerenciarCategoriasGUI extends JFrame {
-    // Add Referencia, lista de categorias, modelo de armazenamento, botões, campo do nome
+public class GerenciarCategoriasGUI {
+
+    private JFrame frame;
     private GestorCategoria gestorCategoria;
     private JList<String> list;
     private DefaultListModel<String> listModel;
@@ -14,43 +15,40 @@ public class GerenciarCategoriasGUI extends JFrame {
     private JButton addButton;
     private JTextField nameField;
     private JComboBox<String> typeComboBox;
-    private List<Categoria> categorias; // armazenadas
+    private List<Categoria> categorias;
 
-    public GerenciarCategoriasGUI(GestorCategoria gestorCategoria) {        // Recebe referencia
+    public GerenciarCategoriasGUI(GestorCategoria gestorCategoria) {
         this.gestorCategoria = gestorCategoria;
-        categorias = gestorCategoria.getCategorias();    // puxa as categorias
-        initialize();         // init na interface
+        categorias = gestorCategoria.getCategorias();
+        initialize();
     }
 
     private void initialize() {
-        setTitle("Gerenciar Categorias");
-        setBounds(100, 100, 400, 300);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // fecha a janela sem fechar tudo
-        setLayout(new BorderLayout());
+        frame = new JFrame("Gerenciar Categorias");
+        frame.setBounds(100, 100, 400, 300);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
 
-        
-        listModel = new DefaultListModel<>();        // modelo das categoras
+        listModel = new DefaultListModel<>();
         atualizarListaCategorias();
 
-        
         list = new JList<>(listModel);
-        JScrollPane scrollPane = new JScrollPane(list);    // scroll na lista
-        add(scrollPane, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(list);
+        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());        // tela pra editar a categoria
+        panel.setLayout(new FlowLayout());
 
         nameField = new JTextField(15);
-        typeComboBox = new JComboBox<>(new String[]{"DESPEZA", "RECEITA"});    
+        typeComboBox = new JComboBox<>(new String[]{"DESPEZA", "RECEITA"});
 
         panel.add(new JLabel("Nome:"));
         panel.add(nameField);
         panel.add(new JLabel("Tipo:"));
         panel.add(typeComboBox);
 
-        add(panel, BorderLayout.NORTH);
+        frame.getContentPane().add(panel, BorderLayout.NORTH);
 
-        // Botões
         JPanel buttonPanel = new JPanel();
         addButton = new JButton("Adicionar");
         editButton = new JButton("Editar");
@@ -60,44 +58,43 @@ public class GerenciarCategoriasGUI extends JFrame {
         buttonPanel.add(editButton);
         buttonPanel.add(removeButton);
 
-        add(buttonPanel, BorderLayout.SOUTH);
+        frame.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
-  
-        addButton.addActionListener(new ActionListener() {            // Add Categoria
+        addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = nameField.getText();                    // get nome da categoria
+                String name = nameField.getText();
                 TipoCategoria type = TipoCategoria.valueOf(typeComboBox.getSelectedItem().toString());
 
-                
-                gestorCategoria.adicionarCategoria(name, type);    
-                atualizarListaCategorias(); // Att lista
-                JOptionPane.showMessageDialog(null, "Categoria adicionada com sucesso!");
+                if (!name.isEmpty()) {
+                    gestorCategoria.adicionarCategoria(name, type);
+                    atualizarListaCategorias();
+                    JOptionPane.showMessageDialog(null, "Categoria adicionada com sucesso!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "O nome da categoria não pode ser vazio.");
+                }
             }
         });
-
-        editButton.addActionListener(new ActionListener() {    // editar categorias
+        
+        editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = list.getSelectedIndex();
                 if (selectedIndex != -1) {
-                    // Pega a categoria selecionada
                     Categoria selectedCategory = categorias.get(selectedIndex);
 
-                    // Preenche o campo de texto com o nome da categoria selecionada
                     nameField.setText(selectedCategory.getNome());
                     typeComboBox.setSelectedItem(selectedCategory.getTipo().toString());
- 
-                    addButton.setText("Atualizar");      // quando seleciona uma categoria ele muda pra editar (está com problema pq não volta pra adicionar)
-                    addButton.removeActionListener(addButton.getActionListeners()[0]); 
+
+                    addButton.setText("Atualizar");
+                    addButton.removeActionListener(addButton.getActionListeners()[0]);  // Remove o listener anterior
                     addButton.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            String newName = nameField.getText();             // get nome novo
+                            String newName = nameField.getText();
                             TipoCategoria newType = TipoCategoria.valueOf(typeComboBox.getSelectedItem().toString());
 
-                            
-                            gestorCategoria.removerCategoria(selectedCategory.getNome());        // Atualiza a categoria no gestor
+                            gestorCategoria.removerCategoria(selectedCategory.getNome());
                             gestorCategoria.adicionarCategoria(newName, newType);
 
                             atualizarListaCategorias();
@@ -110,32 +107,30 @@ public class GerenciarCategoriasGUI extends JFrame {
             }
         });
 
-        // Ação para remover categoria
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = list.getSelectedIndex();
                 if (selectedIndex != -1) {
-                    Categoria selectedCategory = categorias.get(selectedIndex);         // Pega a categoria selecionada
+                    Categoria selectedCategory = categorias.get(selectedIndex);
 
                     gestorCategoria.removerCategoria(selectedCategory.getNome());
                     atualizarListaCategorias();
-                    JOptionPane.showMessageDialog(null, "Categoria removida com sucesso!");            // Remove a categoria
+                    JOptionPane.showMessageDialog(null, "Categoria removida com sucesso!");
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione uma categoria para remover.");
                 }
             }
         });
-    }
 
-    private void atualizarListaCategorias() {             // Atualiza a lista de categorias na interface (Teste)
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+    private void atualizarListaCategorias() {
+        categorias = gestorCategoria.getCategorias();
         listModel.clear();
         for (Categoria categoria : categorias) {
             listModel.addElement(categoria.getNome() + " - " + categoria.getTipo());
         }
-    }
-
-    public void exibir() {
-        setVisible(true);
     }
 }
