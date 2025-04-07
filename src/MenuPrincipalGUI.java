@@ -1,8 +1,10 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import import java.awt.event.ActionEvent;
 
 public class MenuPrincipalGUI {
+
     private JFrame frame;
     private JMenuBar menuBar;
     private JMenu mnTransacao, mnResumoFinanceiro, mnCategoria;
@@ -62,11 +64,12 @@ public class MenuPrincipalGUI {
             }
         });
         mnCategoria.add(miGerenciarCategorias);
-
         menuBar.add(mnTransacao);
         menuBar.add(mnResumoFinanceiro);
         menuBar.add(mnCategoria);
+        frame.setVisible(true);
 
+    public void exibir() {
         frame.setVisible(true);
     }
 }
