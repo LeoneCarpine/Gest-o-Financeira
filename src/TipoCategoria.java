@@ -1,4 +1,4 @@
 public enum TipoCategoria {
-    DESPEZA,
+    DESPESA,
     RECEITA
 }

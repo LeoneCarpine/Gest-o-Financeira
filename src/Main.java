@@ -1,17 +1,16 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
+
     public static void main(String[] args) {
-        // Criação do gestor de usuários e transações
-        GestorUsuarios gestorUsuarios = new GestorUsuarios();
-        GestorTransacoes gestorTransacoes = new GestorTransacoes();
-        GestorCategoria gestorCategoria = new GestorCategoria();
 
-        // Adicionar o usuário administrador (se não existir)
-        gestorUsuarios.registrarUsuario("adm", "Admin4123", "Administrador");
+        List<Usuario> usuarios = new ArrayList<>();
+        List<Categoria> categorias = new ArrayList<>();
+        List<Transacao> transacoes = new ArrayList<>();
 
-        // Exibir a tela de login
-        CadastroLoginGUI loginGUI = new CadastroLoginGUI(gestorUsuarios);
-        loginGUI.exibir();  // Exibe a tela de login
+        usuarios.add(new Usuario("adm", "Admin4123", "Administrador"));
 
-        // Após o login bem-sucedido, o redirecionamento para o MenuPrincipalGUI será feito na classe CadastroLoginGUI
+        new CadastroLoginGUI(usuarios, categorias, transacoes);
     }
 }

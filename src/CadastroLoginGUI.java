@@ -2,67 +2,39 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class CadastroLoginGUI {
 
     private JFrame frame;
     private JTextField txtEmail;
     private JPasswordField txtSenha;
-    private GestorUsuarios gestorUsuarios;
+    private List<Usuario> usuarios;
+    private List<Categoria> categorias;
+    private List<Transacao> transacoes;
 
-    public CadastroLoginGUI(GestorUsuarios gestorUsuarios) {
-        this.gestorUsuarios = gestorUsuarios;
+    public CadastroLoginGUI(List<Usuario> usuarios, List<Categoria> categorias, List<Transacao> transacoes) {
+        this.usuarios = usuarios;
+        this.categorias = categorias;
+        this.transacoes = transacoes;
         initialize();
     }
 
     private void initialize() {
-        // Criando a janela com um tamanho maior
         frame = new JFrame("Login");
         frame.setBounds(100, 100, 400, 250);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().setLayout(new GridLayout(3, 2, 10, 10));
 
-        // Layout mais flexível para centralizar os componentes
-        frame.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        // Personalizando o layout
-        gbc.insets = new Insets(10, 10, 10, 10);  // Adicionando espaçamento entre os componentes
-        gbc.anchor = GridBagConstraints.CENTER;
-
-        // Criando componentes do formulário
-        JLabel lblEmail = new JLabel("User:");
-        lblEmail.setFont(new Font("Arial", Font.PLAIN, 16));  // Fontes maiores para mais visibilidade
-        txtEmail = new JTextField(20);
+        JLabel lblEmail = new JLabel("Email:");
+        txtEmail = new JTextField();
+        txtEmail.setColumns(10);
 
         JLabel lblSenha = new JLabel("Senha:");
-        lblSenha.setFont(new Font("Arial", Font.PLAIN, 16));  // Fontes maiores para mais visibilidade
-        txtSenha = new JPasswordField(20);
+        txtSenha = new JPasswordField();
+        txtSenha.setColumns(10);
 
         JButton btnLogin = new JButton("Login");
-        btnLogin.setFont(new Font("Arial", Font.BOLD, 14));  // Fonte maior no botão para destacar
-
-        // Posicionando os componentes usando GridBagLayout
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        frame.add(lblEmail, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        frame.add(txtEmail, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        frame.add(lblSenha, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        frame.add(txtSenha, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        frame.add(btnLogin, gbc);
-
-        // Definindo ação do botão de login
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -70,27 +42,35 @@ public class CadastroLoginGUI {
             }
         });
 
-        frame.setLocationRelativeTo(null);  // Centraliza a janela na tela
+        frame.getContentPane().add(lblEmail);
+        frame.getContentPane().add(txtEmail);
+        frame.getContentPane().add(lblSenha);
+        frame.getContentPane().add(txtSenha);
+        frame.getContentPane().add(btnLogin);
+
+        frame.setVisible(true);
     }
 
     private void loginUsuario() {
         String email = txtEmail.getText();
         String senha = new String(txtSenha.getPassword());
 
-        // Verificando se as credenciais são para o administrador
-        if (email.equals("adm") && senha.equals("Admin4123")) {
+        Usuario usuarioLogado = null;
+        for (Usuario usuario : usuarios) {
+            if (usuario.getEmail().equals(email) && usuario.getSenha().equals(senha)) {
+                usuarioLogado = usuario;
+                break;
+            }
+        }
 
-            // Redireciona para o MenuPrincipalGUI após login bem-sucedido
-            new MenuPrincipalGUI(new GestorTransacoes(), new GestorCategoria()).exibir();  // Exemplo de redirecionamento para o menu principal
+        if (usuarioLogado != null) {
+            JOptionPane.showMessageDialog(frame, "Login bem-sucedido!");
 
-            frame.dispose();  // Fecha a tela de login
+            new MenuPrincipalGUI(categorias, transacoes, usuarioLogado);
+
+            frame.dispose();
         } else {
             JOptionPane.showMessageDialog(frame, "Erro: Email ou senha inválidos.");
         }
-    }
-
-    // Metodo para exibir a janela de login
-    public void exibir() {
-        frame.setVisible(true);  // Torna a tela visível
     }
 }
