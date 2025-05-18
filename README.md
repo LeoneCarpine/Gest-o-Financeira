@@ -1,4 +1,4 @@
-# Gest-o-Financeira
+# Gestão-Financeira
 
 Foi criado um app de Java com Swing como avaliação parcial da matéria de laboratório de banco de dados, o app tem como objetivo organizar finanças pessoais de um usuário específico, contendo login e usuário, cadastro de receitas e despesas, classificação por categorias, gerenciamento das categorias, visualização do resumo financeiro e histórico de transações por filtros.
 
